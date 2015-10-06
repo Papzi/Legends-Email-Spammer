@@ -1,0 +1,129 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:Legends_Email_Spammer"
+		xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
+		x:Class="Legends_Email_Spammer.MainWindow"
+		WindowStyle="None"
+		ResizeMode="CanMinimize"
+		AllowsTransparency="True"
+        mc:Ignorable="d"
+        Title="Legends email spammer" Height="647.6" Width="525" Background="#00222222">
+
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome
+			ResizeBorderThickness="6"
+            CaptionHeight="27"
+            CornerRadius="5,5,10,10"
+            GlassFrameThickness="0"
+			/>
+
+    </shell:WindowChrome.WindowChrome>
+
+    <Grid Margin="0,0,0,0" Background="#00222222">
+        <Rectangle Fill="#FF222222" Margin="0,33,0,-0.4"/>
+        <Button x:Name="StartButton" HorizontalAlignment="Left" Width="123" Background="#FF337F33" BorderBrush="{x:Null}" Foreground="White" Margin="83,0,0,40" Content="Start" ToolTip="Start the spam" FontFamily="Charlemagne Std" FontSize="13.333" Height="34" VerticalAlignment="Bottom" Click="StartButton_Click"/>
+        <Label x:Name="EmailLabel" Content="Email:" HorizontalAlignment="Left" Height="26" Margin="47,118,0,0" VerticalAlignment="Top" Width="67" Foreground="White" Background="#00000000"/>
+        <Image Source="C:\Users\dank 420 madafacker\Desktop\LEGENDS_2_0_DELIMETER.png" Margin="0,0,0,79" RenderTransformOrigin="0.5,0.5" Height="38" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="523" Grid.ColumnSpan="2" />
+        <PasswordBox x:Name="EmailPassword" Margin="102,163,0,0" Background="#FFEEEEEE" BorderBrush="Black" Foreground="#FF222222" SelectionBrush="#FF005EBB" Height="21" VerticalAlignment="Top" HorizontalAlignment="Left" Width="169"/>
+        <Label x:Name="PasswordLabel" Content="Password:" Height="25" Margin="27,160,0,0" VerticalAlignment="Top" Foreground="White" Background="#00000000" HorizontalAlignment="Left" Width="67"/>
+        <TextBox x:Name="EmailSMTPServer" Height="23" Margin="368,120,0,0" TextWrapping="Wrap" Text="Email server" Background="#FFEEEEEE" BorderBrush="Black" Foreground="#FF222222" VerticalAlignment="Top" Visibility="Visible" SelectionBrush="#FF005EBB" HorizontalAlignment="Left" Width="111" MaxLines="1" Grid.ColumnSpan="2"/>
+        <Label x:Name="SMTPServerLabel" Content="SMTP server:" Margin="285,118,0,0" Foreground="White" Background="#00000000" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="87"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="92,55,0,0" TextWrapping="Wrap" Text="Legends Email Spammer" VerticalAlignment="Top" FontFamily="Harlow Solid Italic" Height="49" Width="341" FontSize="32" FontWeight="Bold">
+            <TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                            <RotateTransform Angle="-90" CenterY="0.5" CenterX="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="#FFFFED8B" Offset="0"/>
+                    <GradientStop Color="#FFDDB500" Offset="1"/>
+                    <GradientStop Color="#FFDDB500" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
+        <Button x:Name="validateEmail" Background="#FF444444" BorderBrush="{x:Null}" Foreground="White" Margin="368,163,0,0" Content="Validate" ToolTip="Validate the current config" RenderTransformOrigin="0.478,1.086" HorizontalAlignment="Left" Width="111" Height="23" VerticalAlignment="Top" Click="validateEmail_Click" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="emailAddress" Margin="102,120,0,0" TextWrapping="Wrap" Text="Email" Background="#FFEEEEEE" BorderBrush="Black" Foreground="#FF222222" Visibility="Visible" SelectionBrush="#FF005EBB" MaxLines="1" Height="23" VerticalAlignment="Top" RenderTransformOrigin="0.639,2.174" HorizontalAlignment="Left" Width="169" TextChanged="emailAddress_TextChanged"/>
+        <Button x:Name="advancedSwitch" HorizontalAlignment="Left" Width="27" Background="#FF333333" BorderBrush="{x:Null}" Foreground="White" Content="Næ" ToolTip="Næ..." FontFamily="Charlemagne Std" FontSize="13.333" Click="advancedSwitch_Click" Height="23" VerticalAlignment="Bottom" Margin="478,0,0,7"/>
+        <TextBox x:Name="bodyBox" Background="#FFF4F4F5" HorizontalAlignment="Left" Margin="47,311,0,138" Width="432" MaxLines="400000" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="errorBox" Text="Credits to Nohax and Speedyjens @ HF" HorizontalAlignment="Left" Margin="47,274,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="432" Foreground="#FFFF3133" FontWeight="Bold" FontSize="14.667" Height="20" Grid.ColumnSpan="2"/>
+        <Label x:Name="toLabel" Content="To:" HorizontalAlignment="Left" Height="26" Margin="73,198,0,0" VerticalAlignment="Top" Width="67" Foreground="White" Background="#00000000"/>
+        <Label x:Name="subjectLabel" Content="Subject:" HorizontalAlignment="Left" Height="26" Margin="47,235,0,0" VerticalAlignment="Top" Width="67" Foreground="White" Background="#00000000"/>
+        <TextBox x:Name="toBox" Margin="102,202,0,0" TextWrapping="Wrap" Text="" Background="#FFEEEEEE" BorderBrush="Black" Foreground="#FF222222" Visibility="Visible" SelectionBrush="#FF005EBB" MaxLines="1" Height="23" VerticalAlignment="Top" RenderTransformOrigin="0.639,2.174" HorizontalAlignment="Left" Width="169" TextChanged="toBox_TextChanged"/>
+        <TextBox x:Name="subjectBox" Margin="102,241,0,0" TextWrapping="Wrap" Text="Subject" Background="#FFEEEEEE" BorderBrush="Black" Foreground="#FF222222" Visibility="Visible" SelectionBrush="#FF005EBB" MaxLines="1" Height="23" VerticalAlignment="Top" RenderTransformOrigin="0.639,2.174" HorizontalAlignment="Left" Width="169"/>
+        <Button x:Name="sendButton" Content="Test mail" HorizontalAlignment="Left" ToolTip="Sends one email using the current settings to your own email." Margin="368,202,0,0" VerticalAlignment="Top" Width="111" Click="SendButton_Click" Background="#FF444444" BorderBrush="{x:Null}" Foreground="White" Height="23" Grid.ColumnSpan="2"/>
+        <local:NumberInput x:Name="delayBox" Margin="368,241,0,0" DefaultNumber="1000" Background="#FFEEEEEE" BorderBrush="Black" Foreground="#FF222222" Visibility="Visible" Height="23" VerticalAlignment="Top" RenderTransformOrigin="0.639,2.174" HorizontalAlignment="Left" ToolTip="Delay in milliseconds e.g 1000 milliseconds is 1 second" Width="111" Grid.ColumnSpan="2"/>
+        <Label x:Name="delayBoxLabel" Content="Delay:" Margin="321,240,0,0" Foreground="White" Background="#00000000" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="46"/>
+        <Label x:Name="label" Content="MS" HorizontalAlignment="Left" Margin="452,237,0,0" VerticalAlignment="Top" Height="23" Width="27"/>
+        <Button x:Name="aboutButton" Content="About!" HorizontalAlignment="Left" ToolTip="About button lol!" Margin="293,0,0,40" Width="123" Click="aboutButton_Click" Background="#FF444444" BorderBrush="{x:Null}" Foreground="White" Height="34" VerticalAlignment="Bottom" FontFamily="Charlemagne Std" FontSize="13.333"/>
+        <Rectangle Height="35" Margin="-2,-2,-4,0" VerticalAlignment="Top" Grid.ColumnSpan="4" Fill="#F2444444"/>
+        <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" x:Name="closeButton" BorderBrush="{x:Null}" Content="x" RenderTransformOrigin="0.478,1.086" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="33" VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" Foreground="White" FontFamily="Consolas" FontSize="18.667" Click="closeButton_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#00000000"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Red"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" x:Name="MinimizeButton" BorderBrush="{x:Null}" Margin="0,-2,32,0" Content="_" RenderTransformOrigin="0.478,1.086" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="35" VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" Foreground="White" FontFamily="Consolas" FontSize="18.667" Click="MinimizeButton_Click">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Background" Value="#00000000"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Orange"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <TextBlock x:Name="Titel" HorizontalAlignment="Left" Margin="39,4,0,0" TextWrapping="Wrap" Text="Legends Email Spammer" VerticalAlignment="Top" Width="188" FontSize="18.667" FontWeight="Bold" FontFamily="Script MT Bold">
+            <TextBlock.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                            <RotateTransform Angle="-90" CenterY="0.5" CenterX="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="#FFFFED8B" Offset="0"/>
+                    <GradientStop Color="#FFDDB500" Offset="1"/>
+                    <GradientStop Color="#FFDDB500" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBlock.Foreground>
+        </TextBlock>
+        <Image x:Name="image" Source="C:\Users\dank 420 madafacker\Pictures\Favicon.png" HorizontalAlignment="Left" Height="33" VerticalAlignment="Top" Width="34"/>
+        <Button shell:WindowChrome.IsHitTestVisibleInChrome="True" x:Name="button" Content="Button" HorizontalAlignment="Left" Height="33" VerticalAlignment="Top" Width="34" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="button_Click"/>
+    </Grid>
+
+</Window>
