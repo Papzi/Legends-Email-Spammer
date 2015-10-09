@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -25,27 +26,50 @@ namespace Legends_Email_Spammer
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
+
 	public partial class MainWindow : Window
 	{
+		private Output ConsoleBox = new Output();
+		private bool started = false;
+		private BrushConverter bc = new BrushConverter();
+		private EmailDetails emailDetails = new EmailDetails();
 		public MainWindow()
 		{
 			InitializeComponent();
 
 			Width = 525;
 
-			var bc = new BrushConverter();
-
-			Application.Current.Properties.Add("started", false);
-			Application.Current.Properties.Add("bc", new BrushConverter());
-
+			// defining some default colors:
 			Application.Current.Properties.Add("TextBoxBorder", (Brush)bc.ConvertFrom("#FF000000"));
 			Application.Current.Properties.Add("TextBoxBorderSuccess", (Brush)bc.ConvertFrom("#FF00FF00"));
 			Application.Current.Properties.Add("TextBoxBorderFailed", (Brush)bc.ConvertFrom("#FFFF0000"));
 			Application.Current.Properties.Add("ButtonStarted", (Brush)bc.ConvertFrom("#FF337F33"));
 			Application.Current.Properties.Add("ButtonStopped", (Brush)bc.ConvertFrom("#FF7F3333"));
 
-			Application.Current.Properties.Add("SpammerThread", new Thread(new ThreadStart(spammerThread)));
-		}
+			Application.Current.Properties.Add("SpammerThread", new Thread(spammerThread));
+        }
+
+		public struct EmailDetails
+		{
+			public string email;
+			public string password;
+			public string SMTP;
+			public string receiver;
+			public string subject;
+			public string body;
+			public string time; // This is the sleep time between each email.
+			public EmailDetails(string Email, string Password, string sMTP, string Receiver, string Subject, string Body, string Time)
+			{
+                email = Email;
+				password = Password;
+				SMTP = sMTP;
+				receiver = Receiver;
+				subject = Subject;
+				body = Body;
+				time = Time;
+            }
+        }
+
 
 		private void validateEmail_Click(object sender, RoutedEventArgs e)
 		{
@@ -54,9 +78,13 @@ namespace Legends_Email_Spammer
 
 		private void advancedSwitch_Click(object sender, RoutedEventArgs e)
 		{
-			if (Width < 1000)
+			throw new NotImplementedException();
+
+			//Shitty prototype code dont look please.
+
+			/*if (Width < 1000)
 			{
-				int finalLength = (int)1000;
+				int finalLength = (int) 1000; // Im just quitly casting an int to an int 
 				double speed = 13.71337;
 				advancedSwitch.Content = "Advanced <<";
 				while (Width < finalLength)
@@ -79,12 +107,12 @@ namespace Legends_Email_Spammer
 					Trace.WriteLine(Width);
 					Thread.Sleep(10);
 				}
-			}
+			}*/
 		}
 
 		private void StartButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (((bool)Application.Current.Properties["started"]) == false)
+			if (!started)
 			{
 
 				startSpam();
@@ -108,6 +136,7 @@ namespace Legends_Email_Spammer
 
 		private bool checkSMTP(string server)
 		{
+			ConsoleBox.WriteLine("Testing smtp server");
 			if (server == "")
 				return false;
 
@@ -120,11 +149,13 @@ namespace Legends_Email_Spammer
 				}
 				catch (System.Net.Sockets.SocketException e)
 				{
-					return false;
+					ConsoleBox.WriteLine(string.Format("An error was thrown while connecting to '{0}:{1}'", server, port));
+                    return false;
 				}
 				// As GMail requires SSL we should use SslStream
 				// If your SMTP server doesn't support SSL you can
 				// work directly with the underlying stream
+				ConsoleBox.WriteLine(string.Format("Sending request to '{0}:{1}'...", server, port));
 				using (var stream = client.GetStream())
 				using (var sslStream = new SslStream(stream))
 				{
@@ -134,7 +165,9 @@ namespace Legends_Email_Spammer
 					{
 						writer.WriteLine("EHLO " + server);
 						writer.Flush();
-						if (reader.ReadLine().StartsWith("220 smtp.gmail.com ESMTP"))
+						string respond = reader.ReadLine();
+                        ConsoleBox.WriteLine(string.Format("'{0}:{1}' responded with:\n{2}", server, port, respond));
+						if (respond.StartsWith("220"))
 							return true;
 						// GMail responds with: 220 mx.google.com ESMTP
 					}
@@ -145,7 +178,6 @@ namespace Legends_Email_Spammer
 
 		private bool validateFields()
 		{
-			var bc = new BrushConverter();
 
 			if (!checkEmail(emailAddress.Text))
 			{
@@ -201,15 +233,11 @@ namespace Legends_Email_Spammer
 
 		private void spammerThread()
 		{
-			while (true)
+            while (started)
 			{
-				Trace.WriteLine("running!");
-				while ((bool)Application.Current.Properties["started"])
-				{
-					sendMail(emailAddress.Text, EmailPassword.Password, emailAddress.Text, subjectBox.Text, bodyBox.Text);
-					Thread.Sleep(int.Parse(delayBox.DefaultNumber));
-				}
-				Thread.Sleep(1000);
+
+				sendMail(emailDetails.email, emailDetails.password, emailDetails.SMTP, emailDetails.receiver, emailDetails.subject, emailDetails.body, false);
+				Thread.Sleep(int.Parse(emailDetails.time));
 			}
 		}
 
@@ -220,34 +248,72 @@ namespace Legends_Email_Spammer
 				errorBox.Text = "The information was not valid";
 				return;
 			}
+			ConsoleBox.WriteLine("Starting email thread.");
 			StartButton.Background = (Brush)Application.Current.Properties["ButtonStopped"];
 			StartButton.Content = "Stop";
 
-			Application.Current.Properties["started"] = true;
+			emailDetails.email = emailAddress.Text;
+			emailDetails.password = EmailPassword.Password;
+			emailDetails.SMTP = EmailSMTPServer.Text;
+			emailDetails.receiver = toBox.Text;
+			emailDetails.subject = subjectBox.Text;
+			emailDetails.body = bodyBox.Text;
+			emailDetails.time = delayBox.DefaultNumber;
+
+			((Thread)Application.Current.Properties["SpammerThread"]).Start();
+            started = true;
 			emailAddress.IsEnabled = false;
 			EmailPassword.IsEnabled = false;
 			EmailSMTPServer.IsEnabled = false;
+			toBox.IsEnabled = false;
+			subjectBox.IsEnabled = false;
+			delayBox.IsEnabled = false;
+			sendButton.IsEnabled = false;
+			validateEmail.IsEnabled = false;
 		}
+
+		public EmailDetails get_email_details()
+		{
+			EmailDetails tmp;
+			tmp.email = emailAddress.Text;
+			tmp.password = EmailPassword.Password;
+			tmp.SMTP = EmailSMTPServer.Text;
+			tmp.receiver = toBox.Text;
+			tmp.subject = subjectBox.Text;
+			tmp.body = bodyBox.Text;
+			tmp.time = delayBox.DefaultNumber;
+			return tmp;
+        }
 
 		private void stopSpam()
 		{
+			ConsoleBox.WriteLine("Stopping email thread.");
 
 			StartButton.Background = (Brush)Application.Current.Properties["ButtonStarted"];
 			StartButton.Content = "Start";
 
-			Application.Current.Properties["started"] = false;
-
+			started = false;
 			emailAddress.IsEnabled = true;
 			EmailPassword.IsEnabled = true;
 			EmailSMTPServer.IsEnabled = true;
+			toBox.IsEnabled = true;
+			subjectBox.IsEnabled = true;
+			delayBox.IsEnabled = true;
+			sendButton.IsEnabled = true;
+			validateEmail.IsEnabled = true;
+
+			Application.Current.Properties["SpammerThread"] = new Thread(spammerThread);
+
 		}
 
-		private void sendMail(string email, string password, string to, string subject, string body)
+		private void sendMail(string email, string password, string smtp, string to, string subject, string body, bool debug=true)
 		{
+			if (debug)
+				ConsoleBox.WriteLine("Sending email...");
 			try
 			{
 				MailMessage mail = new MailMessage();
-				SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+				SmtpClient SmtpServer = new SmtpClient(smtp);
 
 				mail.From = new MailAddress(email);
 				mail.To.Add(to);
@@ -259,12 +325,17 @@ namespace Legends_Email_Spammer
 				SmtpServer.EnableSsl = true;
 
 				SmtpServer.Send(mail);
-				MessageBox.Show("mail Send");
-			}
+				if (debug)
+					ConsoleBox.WriteLine("Send mail");
+            }
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.ToString());
-			}
+				if (debug)
+				{
+					ConsoleBox.WriteLine("Failed to send email...");
+					ConsoleBox.WriteLine(ex.ToString());
+				}
+            }
 
 		}
 
@@ -280,7 +351,7 @@ namespace Legends_Email_Spammer
 				errorBox.Text = "The information was not valid";
 				return;
 			}
-			sendMail(emailAddress.Text, EmailPassword.Password, emailAddress.Text, subjectBox.Text, bodyBox.Text);
+			sendMail(emailAddress.Text, EmailPassword.Password, EmailSMTPServer.Text, emailAddress.Text, subjectBox.Text, bodyBox.Text);
 		}
 
 		private void toBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -308,9 +379,9 @@ namespace Legends_Email_Spammer
 			Trace.WriteLine("per");
 		}
 
-		private void button1_Click(object sender, RoutedEventArgs e)
+		private void ConsoleToggle_Click(object sender, RoutedEventArgs e)
 		{
-
+			ConsoleBox.Show();
 		}
 	}
 }
