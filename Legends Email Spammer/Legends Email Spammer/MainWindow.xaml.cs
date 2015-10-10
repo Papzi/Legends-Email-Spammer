@@ -354,14 +354,9 @@ namespace Legends_Email_Spammer
 			sendMail(emailAddress.Text, EmailPassword.Password, EmailSMTPServer.Text, emailAddress.Text, subjectBox.Text, bodyBox.Text);
 		}
 
-		private void toBox_TextChanged(object sender, TextChangedEventArgs e)
-		{
-
-		}
-
 		private void aboutButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			MessageBox.Show("Made by Speedyjens & NoHax @ Hacktify Digital Group");
 		}
 
 		private void MinimizeButton_Click(object sender, RoutedEventArgs e)
